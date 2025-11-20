@@ -1,4 +1,4 @@
-# 🚀 Gerenciador de Releases – Spring Boot
+# Gerenciador de Releases – Spring Boot
 
 ![Java](https://img.shields.io/badge/java-17%2B-blue.svg)
 ![Spring Boot](https://img.shields.io/badge/spring%20boot-3.x-brightgreen)
@@ -8,14 +8,14 @@
 
 ---
 
-## 📖 Sumário
+## sumario
 
-- [Descrição](#descricao)
+- [Descricao](#descricao)
 - [Diagrama UML](#diagrama-uml)
 - [Estrutura de Pastas e Arquivos](#estrutura-de-pastas-e-arquivos)
 - [Rotas da API](#rotas-da-api)
-- [Instalacao](#instrucao-de-instalacao)
-- [Uso](#instrucoes-de-uso)
+- [Instrucao de Instalacao](#instrucao-de-instalacao)
+- [Instrucoes de Uso](#instrucoes-de-uso)
 - [Licenca](#licenca)
 - [Contribuicao](#contribuicao)
 - [Gitflow](#gitflow)
@@ -23,17 +23,17 @@
 
 ---
 
-## 📝 Descrição
+## descricao
 
-Aplicação **RESTful API** para o controle e versionamento de releases (entregas) de software, provendo histórico, rastreabilidade e segurança das operações.
+Aplicacao RESTful API para o controle e versionamento de releases de software, provendo historico, rastreabilidade e seguranca das operacoes.
 
-- Permite **cadastrar, consultar, atualizar notas e deletar (soft delete)** releases de diferentes sistemas.
-- Cada release possui versionamento, commits vinculados, usuário responsável, timestamps de criação e atualização.
+- Permite cadastrar, consultar, atualizar notas e deletar (soft delete) releases de diferentes sistemas.
+- Cada release possui versionamento, commits vinculados, usuario responsavel, timestamps de criacao e atualizacao.
 - API robusta, validada, documentada e pronta para uso profissional.
 
 ---
 
-## 🎨 Diagrama UML (Simplificado)
+## diagrama-uml
 
 ```mermaid
 classDiagram
@@ -58,35 +58,33 @@ classDiagram
   ReleaseMapper <.. ReleaseController
 ```
 
-> **Nota:** Veja na documentação Swagger códigos e exemplos de payload.
+---
+
+## estrutura-de-pastas-e-arquivos
+
+| Caminho/Arquivo                                    | O que faz                                    |
+| -------------------------------------------------- | -------------------------------------------- |
+| `src/main/java/releases/ReleasesApplication.java`  | Classe main: Inicia o Spring Boot            |
+| `controller/ReleaseController.java`                | Exposicao dos endpoints REST da API          |
+| `service/ReleaseService.java`                      | Logica de negocios e orquestracao            |
+| `model/entity/Release.java`                        | Entidade JPA que representa a tabela release |
+| `model/repository/ReleaseRepository.java`          | Interface JPA para acesso ao banco de dados  |
+| `view/dto/ReleaseRequestDTO.java`                  | DTO dos dados recebidos para criar release   |
+| `view/dto/ReleaseResponseDTO.java`                 | DTO dos dados retornados para o cliente      |
+| `view/mapper/ReleaseMapper.java`                   | Conversao entre entity e DTOs                |
+| `service/exception/GlobalExceptionHandler.java`    | Handler global de erros e validacoes         |
+| `resources/application.yaml`                       | Configuracoes: H2, Spring, Logging           |
+| `test/java/releases/ReleasesApplicationTests.java` | Testes base (unit e integracao)              |
+| `pom.xml`                                          | Dependencias e configuracao do projeto       |
 
 ---
 
-## 🗂️ Estrutura de Pastas e Arquivos (Principais)
+## rotas-da-api
 
-| Caminho/Arquivo                                    | O que faz                                      |
-| -------------------------------------------------- | ---------------------------------------------- |
-| `src/main/java/releases/ReleasesApplication.java`  | Classe main: Inicia o Spring Boot              |
-| `controller/ReleaseController.java`                | Exposição dos endpoints REST da API            |
-| `service/ReleaseService.java`                      | Lógica de negócios e orquestração              |
-| `model/entity/Release.java`                        | Entidade JPA que representa a tabela `release` |
-| `model/repository/ReleaseRepository.java`          | Interface JPA para acesso ao banco de dados    |
-| `view/dto/ReleaseRequestDTO.java`                  | DTO dos dados recebidos para criar release     |
-| `view/dto/ReleaseResponseDTO.java`                 | DTO dos dados retornados para o cliente        |
-| `view/mapper/ReleaseMapper.java`                   | Conversão entre entity e DTOs                  |
-| `service/exception/GlobalExceptionHandler.java`    | Handler global de erros e validações           |
-| `resources/application.yaml`                       | Configurações: H2, Spring, Logging             |
-| `test/java/releases/ReleasesApplicationTests.java` | Testes base (unit e integração)                |
-| `pom.xml`                                          | Dependências e configuração do projeto         |
+### POST /releases — Criar uma nova release
 
----
-
-## 🌐 Rotas da API (Endpoints)
-
-### 📦 `POST /releases` — Criar uma nova release
-
-- **Descrição**: Cria uma release com system, version, commits, notas e usuário.
-- **Body Exemplo**:
+- Descricao: Cria uma release com system, version, commits, notas e usuario.
+- Body Exemplo:
 
 ```json
 {
@@ -98,7 +96,7 @@ classDiagram
 }
 ```
 
-- **Resposta** (`201 Created`):
+- Resposta (201 Created):
 
 ```json
 {
@@ -107,14 +105,14 @@ classDiagram
 }
 ```
 
-- **Regras**: Preencha todos os campos, exceto `notes` (opcional). O campo `Authorization` deve conter o token JWT.
+- Regras: Preencha todos os campos, exceto notes (opcional). O campo Authorization deve conter o token JWT.
 
 ---
 
-### 🎯 `GET /releases/{id}` — Detalhar release
+### GET /releases/{id} — Detalhar release
 
-- **Descrição**: Retorna todos os detalhes de uma release específica pelo ID.
-- **Resposta** (`200 OK`):
+- Descricao: Retorna todos os detalhes de uma release especifica pelo ID.
+- Resposta (200 OK):
 
 ```json
 {
@@ -130,14 +128,14 @@ classDiagram
 }
 ```
 
-- **Regras**: O release deve existir e não pode estar deletado (soft delete).
+- Regras: O release deve existir e nao pode estar deletado (soft delete).
 
 ---
 
-### 📝 `PUT /releases/{id}` — Atualizar as notas de uma release
+### PUT /releases/{id} — Atualizar as notas de uma release
 
-- **Descrição**: Permite atualizar apenas o campo `notes` de uma release específica.
-- **Body Exemplo**:
+- Descricao: Permite atualizar apenas o campo notes de uma release especifica.
+- Body Exemplo:
 
 ```json
 {
@@ -145,7 +143,7 @@ classDiagram
 }
 ```
 
-- **Resposta** (`200 OK`):
+- Resposta (200 OK):
 
 ```json
 {
@@ -153,14 +151,14 @@ classDiagram
 }
 ```
 
-- **Regras**: Requer autorização, só atualiza `notes`.
+- Regras: Requer autorizacao, so atualiza notes.
 
 ---
 
-### 🗑️ `DELETE /releases/{id}` — Deletar logicamente uma release
+### DELETE /releases/{id} — Deletar logicamente uma release
 
-- **Descrição**: Apaga uma release de forma lógica (soft delete, campo `deletedAt`).
-- **Resposta** (`200 OK`):
+- Descricao: Apaga uma release de forma logica (soft delete, campo deletedAt).
+- Resposta (200 OK):
 
 ```json
 {
@@ -168,17 +166,17 @@ classDiagram
 }
 ```
 
-- **Regras**: O release continuará salvo no banco, apenas marcado como deletado.
+- Regras: O release continuara salvo no banco, apenas marcado como deletado.
 
 ---
 
-## 🚀 Instrução de instalação
+## instrucao-de-instalacao
 
-### Pré-requisitos
+### Pre-requisitos
 
-- Java **17+**
-- Maven **3.8+**
-- Git **2.4+**
+- Java 17+
+- Maven 3.8+
+- Git 2.4+
 - (Opcional) Postman, Insomnia, HTTPie, etc.
 
 ```bash
@@ -195,9 +193,9 @@ mvn clean install
 
 ---
 
-## ▶️ Instruções de uso
+## instrucoes-de-uso
 
-1. **Suba a aplicação:**
+1. Suba a aplicacao:
 
    ```bash
    ./mvnw spring-boot:run
@@ -209,47 +207,42 @@ mvn clean install
    java -jar target/releases-*.jar
    ```
 
-2. **Acesse a documentação/Swagger:**  
-   [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
-
-3. **Principais rotas:**
-
-   - `POST /releases` – criar release
-   - `GET /releases/{id}` – detalhar release
-   - `PUT /releases/{id}` – atualizar notas da release
-   - `DELETE /releases/{id}` – apagar logicamente
-
-4. **Banco H2 (debug):**  
-   [http://localhost:8080/h2-console](http://localhost:8080/h2-console)  
-   (JDBC: `jdbc:h2:mem:releases`, User: `sa`)
+2. Acesse a documentação do Swagger [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
+3. Principais rotas:
+   - POST /releases – criar release
+   - GET /releases/{id} – detalhar release
+   - PUT /releases/{id} – atualizar notas da release
+   - DELETE /releases/{id} – apagar logicamente
+4. Banco H2 (debug): [http://localhost:8080/h2-console](http://localhost:8080/h2-console)
+   (JDBC: jdbc:h2:mem:releases, User: sa)
 
 ---
 
-## 📄 Licença
+## licenca
 
-Projeto sob Licença MIT (totalmente livre para uso comercial, estudo, adaptação e inspiração).
-
----
-
-## 🤝 Contribuição
-
-- Issues e Pull Requests são bem-vindos!
-- Sempre use branch com padrão (`feature/`, `hotfix/`, `bugfix/`)
-- Descreva claramente sua alteração e mantenha o padrão de qualidade.
+Projeto sob Licenca MIT (totalmente livre para uso comercial, estudo, adaptacao e inspiracao).
 
 ---
 
-## 🔀 Gitflow
+## contribuicao
+
+- Issues e Pull Requests sao bem-vindos!
+- Sempre use branch com padrao (feature/, hotfix/, bugfix/)
+- Descreva claramente sua alteracao e mantenha o padrao de qualidade.
+
+---
+
+## gitflow
 
 - Crie branches com prefixos:
-  - `feature/NOME_DA_FEATURE`
-  - `bugfix/NOME_DO_BUG`
-  - `hotfix/CORRECAO`
-- Pull Requests devem ser feitos para o branch `main`.
-- Utilize nomes descritivos e documente mudanças relevantes.
+  - feature/NOME_DA_FEATURE
+  - bugfix/NOME_DO_BUG
+  - hotfix/CORRECAO
+- Pull Requests devem ser feitos para o branch main.
+- Utilize nomes descritivos e documente mudancas relevantes.
 
 ---
 
-## 👤 Autor
+## autor
 
 - [Darieldon Medeiros](https://github.com/DarieldonMedeiros)
