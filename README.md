@@ -8,22 +8,20 @@
 
 ---
 
-## 📖 sumario
+## 📖 Sumário
 
-- [📄 Descricao](#-descricao)
+- [📄 Descricao](#-descrição)
 - [🎨 Diagrama UML](#-diagrama-uml)
-- [🗂️ Estrutura de Pastas e Arquivos](#-estrutura-de-pastas-e-arquivos)
+- [🗂️ Organanização das Pastass](#%EF%B8%8F-organização-das-pastas)
 - [🚦 Rotas da API](#-rotas-da-api)
-- [🛠️ Instrucao de Instalacao](#-instrucao-de-instalacao)
-- [▶️ Instrucoes de Uso](#-instrucoes-de-uso)
-- [📝 Licenca](#-licenca)
-- [🤝 Contribuicao](#-contribuicao)
-- [🔀 Gitflow](#-gitflow)
+- [🛠️ Instrução de Instalação](#%EF%B8%8F-instrução-de-instalação)
+- [▶️ Instruções de Uso](#%EF%B8%8F-instruções-de-uso)
+- [📝 Licença](#-licença)
 - [👤 Autor](#-autor)
 
 ---
 
-## 📄 descricao
+## 📄 Descrição
 
 Aplicacao RESTful API para o controle e versionamento de releases de software, provendo historico, rastreabilidade e seguranca das operacoes.
 
@@ -33,70 +31,156 @@ Aplicacao RESTful API para o controle e versionamento de releases de software, p
 
 ---
 
-## 🎨 diagrama-uml
+## 🎨 Diagrama UML
 
 ```mermaid
 classDiagram
-  class ReleaseController {
-    +create()
-    +getById()
-    +updateNotes()
-    +softDelete()
-  }
-  class ReleaseServiceImpl
-  class ReleaseService
-  class CrudService
-  class ReleaseRepository
-  class Release
-  class ReleaseRequestDTO
-  class ReleaseResponseDTO
-  class ReleaseCreateResponseDTO
-  class MessageDTO
-  class ReleaseUpdateNotesDTO
-  class ReleaseMapper
-  class GlobalExceptionHandler
-  class ResourceNotFoundException
 
-  ReleaseController --> ReleaseService
-  ReleaseServiceImpl ..|> ReleaseService
-  ReleaseServiceImpl --> ReleaseRepository
-  ReleaseRepository ..|> JpaRepository
-  ReleaseService ..|> CrudService
-  ReleaseMapper <.. ReleaseController
-  ReleaseRequestDTO <.. ReleaseController
-  ReleaseCreateResponseDTO <.. ReleaseController
-  ReleaseUpdateNotesDTO <.. ReleaseController
-  ReleaseResponseDTO <.. ReleaseController
-  Release --> ReleaseRequestDTO
-  Release --> ReleaseResponseDTO
-  GlobalExceptionHandler ..> ResourceNotFoundException
+%% Records
+class ReleaseRequestDTO {
+  +String system
+  +String version
+  +List~String~ commits
+  +String notes
+  +String user
+}
+class ReleaseResponseDTO {
+  +String message
+  +Long id
+  +String system
+  +String version
+  +List~String~ commits
+  +String notes
+  +String user
+  +String userUpdate
+  +LocalDateTime releasedAt
+}
+class ReleaseUpdateNotesDTO {
+  +String notes
+}
+class ReleaseCreateResponseDTO {
+  +Long id
+  +String message
+}
+class MessageDTO {
+  +String message
+}
+
+%% Classes
+class Release {
+  -Long id
+  -String system
+  -String version
+  -List~String~ commits
+  -String notes
+  -String user
+  -String userUpdate
+  -LocalDateTime releasedAt
+  -LocalDateTime deletedAt
+  +void setSystem(String)
+  +void softDelete()
+  +boolean isDeleted()
+  +boolean equals(Object)
+  +int hashCode()
+}
+class ReleaseController {
+  +ReleaseCreateResponseDTO create(ReleaseRequestDTO, String)
+  +ReleaseResponseDTO getById(Long)
+  +MessageDTO updateNotes(Long, ReleaseUpdateNotesDTO, String)
+  +MessageDTO softDelete(Long)
+  -String extractUser(String)
+}
+class ReleaseService {
+  <<interface>>
+  +Release create(Release, String)
+  +Release findById(Long)
+  +void updateNotes(Long, String, String)
+  +void softDelete(Long)
+}
+class CrudService {
+  <<interface>>
+  +T create(T, String)
+  +T findById(ID)
+  +void updateNotes(ID, String, String)
+  +void softDelete(ID)
+}
+class ReleaseServiceImpl {
+  +Release create(Release, String)
+  +Release findById(Long)
+  +void updateNotes(Long, String, String)
+  +void softDelete(Long)
+}
+class ReleaseRepository {
+  <<interface>>
+  +Optional<Release> findByIdAndDeletedAtIsNull(Long)
+  +List<Release> findAllByDeletedAtIsNull()
+}
+class ReleaseMapper {
+  +Release toEntity(ReleaseRequestDTO)
+  +ReleaseResponseDTO toResponseDTO(Release)
+  +ReleaseCreateResponseDTO toCreateResponseDTO(Release)
+}
+class GlobalExceptionHandler {
+  +ResponseEntity<Map<String,String>> handleNotFound(ResourceNotFoundException)
+  +ResponseEntity<Map<String,Object>> handleValidation(MethodArgumentNotValidException)
+}
+class ResourceNotFoundException {
+  +ResourceNotFoundException(String)
+}
+
+%% Relações
+ReleaseController --> ReleaseService
+ReleaseServiceImpl ..|> ReleaseService
+ReleaseService ..|> CrudService
+ReleaseServiceImpl --> ReleaseRepository
+ReleaseRepository ..|> JpaRepository
+ReleaseMapper <.. ReleaseController
+ReleaseRequestDTO <.. ReleaseController
+ReleaseCreateResponseDTO <.. ReleaseController
+ReleaseUpdateNotesDTO <.. ReleaseController
+ReleaseResponseDTO <.. ReleaseController
+MessageDTO <.. ReleaseController
+Release --> ReleaseRequestDTO
+Release --> ReleaseResponseDTO
+GlobalExceptionHandler ..> ResourceNotFoundException
+```
+---
+
+## 🗂️ Organização das Pastas
+
+```bash
+.
+├── releases
+│   ├── ReleasesApplication.java
+│   ├── controller
+│   │   └── ReleaseController.java
+│   ├── model
+│   │   ├── entity
+│   │   │   └── Release.java
+│   │   └── repository
+│   │       └── ReleaseRepository.java
+│   ├── service
+│   │   ├── CrudService.java
+│   │   ├── ReleaseService.java
+│   │   ├── impl
+│   │   │   └── ReleaseServiceImpl.java
+│   │   └── exception
+│   │       ├── GlobalExceptionHandler.java
+│   │       └── ResourceNotFoundException.java
+│   └── view
+│       ├── dto
+│       │   ├── MessageDTO.java
+│       │   ├── ReleaseCreateResponseDTO.java
+│       │   ├── ReleaseRequestDTO.java
+│       │   ├── ReleaseResponseDTO.java
+│       │   └── ReleaseUpdateNotesDTO.java
+│       └── mapper
+│           └── ReleaseMapper.java
 ```
 
 ---
 
-## 🗂️ estrutura-de-pastas-e-arquivos
-
-| Caminho/Arquivo                                    | O que faz                                    |
-| -------------------------------------------------- | -------------------------------------------- |
-| `src/main/java/releases/ReleasesApplication.java`  | Classe main: Inicia o Spring Boot            |
-| `controller/ReleaseController.java`                | Exposicao dos endpoints REST da API          |
-| `service/ReleaseService.java`                      | Logica de negocios e orquestracao            |
-| `service/CrudService.java`                         | Interface generica CRUD                      |
-| `service/impl/ReleaseServiceImpl.java`             | Implementacao do servico ReleaseService      |
-| `service/exception/GlobalExceptionHandler.java`    | Handler global de erros e validacoes         |
-| `service/exception/ResourceNotFoundException.java` | Excecao customizada para nao encontrado      |
-| `model/entity/Release.java`                        | Entidade JPA que representa a tabela release |
-| `model/repository/ReleaseRepository.java`          | Interface JPA para acesso ao banco de dados  |
-| `view/dto/ReleaseRequestDTO.java`                  | DTO dos dados recebidos para criar release   |
-| `view/dto/ReleaseResponseDTO.java`                 | DTO dos dados retornados para o cliente      |
-| `view/dto/ReleaseCreateResponseDTO.java`           | DTO resposta do POST                         |
-| `view/dto/ReleaseUpdateNotesDTO.java`              | DTO para atualizar "notes" via PUT           |
-| `view/dto/MessageDTO.java`                         | DTO para mensagens simples                   |
-| `view/mapper/ReleaseMapper.java`                   | Conversao entre entity e DTOs                |
-
----
-
-## 🚦 rotas-da-api
+## 🚦 Rotas da API
 
 ### POST /releases — Criar uma nova release
 
@@ -187,7 +271,7 @@ classDiagram
 
 ---
 
-## 🛠️ instrucao-de-instalacao
+## 🛠️ Instrução de Instalação
 
 ### Pre-requisitos
 
@@ -210,7 +294,7 @@ mvn clean install
 
 ---
 
-## ▶️ instrucoes-de-uso
+## ▶️ Instruções de Uso
 
 1. Suba a aplicacao:
 
@@ -235,65 +319,14 @@ mvn clean install
 
 ---
 
-## 📝 licenca
+## 📝 Licença
 
 Projeto sob Licenca MIT (totalmente livre para uso comercial, estudo, adaptacao e inspiracao).
 
 ---
 
-## 🤝 contribuicao
-
-- Issues e Pull Requests sao bem-vindos!
-- Sempre use branch com padrao (feature/, hotfix/, bugfix/)
-- Descreva claramente sua alteracao e mantenha o padrao de qualidade.
-
----
-
-## 🔀 gitflow
-
-- Crie branches com prefixos:
-  - feature/NOME_DA_FEATURE
-  - bugfix/NOME_DO_BUG
-  - hotfix/CORRECAO
-- Pull Requests devem ser feitos para o branch main.
-- Utilize nomes descritivos e documente mudancas relevantes.
-
----
-
-## 👤 autor
+## 👤 Autor
 
 - [Darieldon Medeiros](https://github.com/DarieldonMedeiros)
 
 ---
-
-## 📂 Organização de Pastas (tree.sh)
-
-```bash
-.
-├── releases
-│   ├── ReleasesApplication.java
-│   ├── controller
-│   │   └── ReleaseController.java
-│   ├── model
-│   │   ├── entity
-│   │   │   └── Release.java
-│   │   └── repository
-│   │       └── ReleaseRepository.java
-│   ├── service
-│   │   ├── CrudService.java
-│   │   ├── ReleaseService.java
-│   │   ├── impl
-│   │   │   └── ReleaseServiceImpl.java
-│   │   └── exception
-│   │       ├── GlobalExceptionHandler.java
-│   │       └── ResourceNotFoundException.java
-│   └── view
-│       ├── dto
-│       │   ├── MessageDTO.java
-│       │   ├── ReleaseCreateResponseDTO.java
-│       │   ├── ReleaseRequestDTO.java
-│       │   ├── ReleaseResponseDTO.java
-│       │   └── ReleaseUpdateNotesDTO.java
-│       └── mapper
-│           └── ReleaseMapper.java
-```
