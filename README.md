@@ -8,22 +8,22 @@
 
 ---
 
-## sumario
+## 📖 sumario
 
-- [Descricao](#descricao)
-- [Diagrama UML](#diagrama-uml)
-- [Estrutura de Pastas e Arquivos](#estrutura-de-pastas-e-arquivos)
-- [Rotas da API](#rotas-da-api)
-- [Instrucao de Instalacao](#instrucao-de-instalacao)
-- [Instrucoes de Uso](#instrucoes-de-uso)
-- [Licenca](#licenca)
-- [Contribuicao](#contribuicao)
-- [Gitflow](#gitflow)
-- [Autor](#autor)
+- [📄 Descricao](#-descricao)
+- [🎨 Diagrama UML](#-diagrama-uml)
+- [🗂️ Estrutura de Pastas e Arquivos](#-estrutura-de-pastas-e-arquivos)
+- [🚦 Rotas da API](#-rotas-da-api)
+- [🛠️ Instrucao de Instalacao](#-instrucao-de-instalacao)
+- [▶️ Instrucoes de Uso](#-instrucoes-de-uso)
+- [📝 Licenca](#-licenca)
+- [🤝 Contribuicao](#-contribuicao)
+- [🔀 Gitflow](#-gitflow)
+- [👤 Autor](#-autor)
 
 ---
 
-## descricao
+## 📄 descricao
 
 Aplicacao RESTful API para o controle e versionamento de releases de software, provendo historico, rastreabilidade e seguranca das operacoes.
 
@@ -33,53 +33,70 @@ Aplicacao RESTful API para o controle e versionamento de releases de software, p
 
 ---
 
-## diagrama-uml
+## 🎨 diagrama-uml
 
 ```mermaid
 classDiagram
-  class Release {
-    Long id
-    String system
-    String version
-    List~String~ commits
-    String notes
-    String user
-    String userUpdate
-    LocalDateTime releasedAt
-    LocalDateTime deletedAt
+  class ReleaseController {
+    +create()
+    +getById()
+    +updateNotes()
     +softDelete()
-    +isDeleted()
   }
-  ReleaseRepository --|> JpaRepository
-  ReleaseService --> ReleaseRepository
+  class ReleaseServiceImpl
+  class ReleaseService
+  class CrudService
+  class ReleaseRepository
+  class Release
+  class ReleaseRequestDTO
+  class ReleaseResponseDTO
+  class ReleaseCreateResponseDTO
+  class MessageDTO
+  class ReleaseUpdateNotesDTO
+  class ReleaseMapper
+  class GlobalExceptionHandler
+  class ResourceNotFoundException
+
   ReleaseController --> ReleaseService
-  ReleaseRequestDTO <.. ReleaseController
-  ReleaseResponseDTO <.. ReleaseController
+  ReleaseServiceImpl ..|> ReleaseService
+  ReleaseServiceImpl --> ReleaseRepository
+  ReleaseRepository ..|> JpaRepository
+  ReleaseService ..|> CrudService
   ReleaseMapper <.. ReleaseController
+  ReleaseRequestDTO <.. ReleaseController
+  ReleaseCreateResponseDTO <.. ReleaseController
+  ReleaseUpdateNotesDTO <.. ReleaseController
+  ReleaseResponseDTO <.. ReleaseController
+  Release --> ReleaseRequestDTO
+  Release --> ReleaseResponseDTO
+  GlobalExceptionHandler ..> ResourceNotFoundException
 ```
 
 ---
 
-## estrutura-de-pastas-e-arquivos
+## 🗂️ estrutura-de-pastas-e-arquivos
 
 | Caminho/Arquivo                                    | O que faz                                    |
 | -------------------------------------------------- | -------------------------------------------- |
 | `src/main/java/releases/ReleasesApplication.java`  | Classe main: Inicia o Spring Boot            |
 | `controller/ReleaseController.java`                | Exposicao dos endpoints REST da API          |
 | `service/ReleaseService.java`                      | Logica de negocios e orquestracao            |
+| `service/CrudService.java`                         | Interface generica CRUD                      |
+| `service/impl/ReleaseServiceImpl.java`             | Implementacao do servico ReleaseService      |
+| `service/exception/GlobalExceptionHandler.java`    | Handler global de erros e validacoes         |
+| `service/exception/ResourceNotFoundException.java` | Excecao customizada para nao encontrado      |
 | `model/entity/Release.java`                        | Entidade JPA que representa a tabela release |
 | `model/repository/ReleaseRepository.java`          | Interface JPA para acesso ao banco de dados  |
 | `view/dto/ReleaseRequestDTO.java`                  | DTO dos dados recebidos para criar release   |
 | `view/dto/ReleaseResponseDTO.java`                 | DTO dos dados retornados para o cliente      |
+| `view/dto/ReleaseCreateResponseDTO.java`           | DTO resposta do POST                         |
+| `view/dto/ReleaseUpdateNotesDTO.java`              | DTO para atualizar "notes" via PUT           |
+| `view/dto/MessageDTO.java`                         | DTO para mensagens simples                   |
 | `view/mapper/ReleaseMapper.java`                   | Conversao entre entity e DTOs                |
-| `service/exception/GlobalExceptionHandler.java`    | Handler global de erros e validacoes         |
-| `resources/application.yaml`                       | Configuracoes: H2, Spring, Logging           |
-| `test/java/releases/ReleasesApplicationTests.java` | Testes base (unit e integracao)              |
-| `pom.xml`                                          | Dependencias e configuracao do projeto       |
 
 ---
 
-## rotas-da-api
+## 🚦 rotas-da-api
 
 ### POST /releases — Criar uma nova release
 
@@ -132,7 +149,7 @@ classDiagram
 
 ---
 
-### PUT /releases/{id} — Atualizar as notas de uma release
+### PUT /releases/{id} — Atualizar notas de uma release
 
 - Descricao: Permite atualizar apenas o campo notes de uma release especifica.
 - Body Exemplo:
@@ -170,7 +187,7 @@ classDiagram
 
 ---
 
-## instrucao-de-instalacao
+## 🛠️ instrucao-de-instalacao
 
 ### Pre-requisitos
 
@@ -193,7 +210,7 @@ mvn clean install
 
 ---
 
-## instrucoes-de-uso
+## ▶️ instrucoes-de-uso
 
 1. Suba a aplicacao:
 
@@ -218,13 +235,13 @@ mvn clean install
 
 ---
 
-## licenca
+## 📝 licenca
 
 Projeto sob Licenca MIT (totalmente livre para uso comercial, estudo, adaptacao e inspiracao).
 
 ---
 
-## contribuicao
+## 🤝 contribuicao
 
 - Issues e Pull Requests sao bem-vindos!
 - Sempre use branch com padrao (feature/, hotfix/, bugfix/)
@@ -232,7 +249,7 @@ Projeto sob Licenca MIT (totalmente livre para uso comercial, estudo, adaptacao 
 
 ---
 
-## gitflow
+## 🔀 gitflow
 
 - Crie branches com prefixos:
   - feature/NOME_DA_FEATURE
@@ -243,6 +260,40 @@ Projeto sob Licenca MIT (totalmente livre para uso comercial, estudo, adaptacao 
 
 ---
 
-## autor
+## 👤 autor
 
 - [Darieldon Medeiros](https://github.com/DarieldonMedeiros)
+
+---
+
+## 📂 Organização de Pastas (tree.sh)
+
+```bash
+.
+├── releases
+│   ├── ReleasesApplication.java
+│   ├── controller
+│   │   └── ReleaseController.java
+│   ├── model
+│   │   ├── entity
+│   │   │   └── Release.java
+│   │   └── repository
+│   │       └── ReleaseRepository.java
+│   ├── service
+│   │   ├── CrudService.java
+│   │   ├── ReleaseService.java
+│   │   ├── impl
+│   │   │   └── ReleaseServiceImpl.java
+│   │   └── exception
+│   │       ├── GlobalExceptionHandler.java
+│   │       └── ResourceNotFoundException.java
+│   └── view
+│       ├── dto
+│       │   ├── MessageDTO.java
+│       │   ├── ReleaseCreateResponseDTO.java
+│       │   ├── ReleaseRequestDTO.java
+│       │   ├── ReleaseResponseDTO.java
+│       │   └── ReleaseUpdateNotesDTO.java
+│       └── mapper
+│           └── ReleaseMapper.java
+```
