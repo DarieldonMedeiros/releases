@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: releases
+# -----------------
+# CORES NO TERMINAL
+# -----------------
+  output:
+    ansi:
+      enabled: ALWAYS
+# ------------------
+# BANCO DE DADOS H2
+# ------------------
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:releases
+    username: sa
+    password:
+# ------------------
+# JPA / HIBERNATE
+# ------------------
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false
+
+# -------------------
+# CONSOLE WEB DO H2
+# -------------------
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+# --------------------
+# LOGGING DA APLICAÇÃO
+# --------------------
+logging:
+  level:
+    root: INFO
+    org.hibernate.sql: DEBUG
+    org.hibernate.type.description.sql: TRACE
