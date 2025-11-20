@@ -10,7 +10,7 @@
 
 ## 📖 Sumário
 
-- [📄 Descricao](#-descrição)
+- [📄 Descrição](#-descrição)
 - [🎨 Diagrama UML](#-diagrama-uml)
 - [🗂️ Organanização das Pastass](#%EF%B8%8F-organização-das-pastas)
 - [🚦 Rotas da API](#-rotas-da-api)
